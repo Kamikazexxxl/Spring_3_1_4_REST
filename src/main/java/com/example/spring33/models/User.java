@@ -10,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -135,6 +132,10 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = new HashSet<>(roles);
+    }
+
     public void setRoles(String roles) {
         if (roles != null && !roles.isEmpty()) {
             String[] arrayRoles = roles.split("[^A-Za-zФ-Яа-я0-9]");
@@ -148,7 +149,14 @@ public class User implements UserDetails {
             }
 
         }
+    }
 
+    public void setRoles(String[] roles) {
+        if (roles.length != 0) {
+            Set<Role> roleSet = new HashSet<>();
+            Arrays.stream(roles).forEach(el -> roleSet.add(new Role(el)));
+            this.roles = roleSet;
+        }
     }
 
     public String showPrettyViewOfRoles() {

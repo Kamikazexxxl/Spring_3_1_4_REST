@@ -6,12 +6,10 @@ import com.example.spring33.models.User;
 import com.example.spring33.services.RoleService;
 import com.example.spring33.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+
 import java.util.List;
 
 @org.springframework.web.bind.annotation.RestController
@@ -26,30 +24,36 @@ public class RestController {
         this.roleService = roleService;
     }
 
+    @PostMapping("/jj")
+    public void get(@RequestBody User user){
+        System.out.println(user);
+        userService.save(user);
+    }
+
     @GetMapping("/current")
     public User getCurrentUser(@AuthenticationPrincipal User user) {
         return userService.findUserByUserName(user.getName());
     }
 
     @GetMapping("/users")
-    public List<User> getInfo(Model model, Principal principal) {
+    public List<User> getInfo() {
         return userService.findAll();
     }
 
     @PostMapping("/users")
-    public User addUser(@ModelAttribute("user") User user) {
+    public void addUser(@RequestBody User user) {
         userService.save(user);
-        return user;
+
     }
 
     @GetMapping("/allroles")
     public List<Role> getRoles() {
-
         return roleService.findAll();
     }
 
     @PatchMapping("/users")
-    public String editUser(@ModelAttribute("user") User user) {
+    public String editUser(@RequestBody User user) {
+        System.out.println(user);
         userService.edit(user);
         return "User was altered";
     }

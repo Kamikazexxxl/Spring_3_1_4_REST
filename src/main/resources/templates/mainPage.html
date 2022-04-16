@@ -68,7 +68,7 @@
                         <div class="nav flex-column nav-pills" id="leftPanel"
                              role="tablist" aria-orientation="vertical">
 
-                            <!--                                    Block will be filled in JS code-->
+                            <!--JS injection-->
                         </div>
                     </div>
                     <!--                Section of tabs with admin/user panel ended-->
@@ -133,7 +133,7 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody id="MainTable">
-                                                            <!--JS-->
+                                                            <!--JS injection-->
                                                             </tbody>
                                                         </table>
                                                         <!--                                                Table with users ended-->
@@ -171,7 +171,7 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody id="BodyTableAboutUser">
-                                                            <!--JS-->
+                                                            <!--JS injection-->
                                                             </tbody>
                                                         </table>
                                                         <!--                                                Info about users ended-->
@@ -242,7 +242,7 @@
                                                         <select multiple class="form-control" id="role_send"
                                                                 required="required" name="roles"
                                                                 placeholder="Choose Role" size="2">
-                                                            <!--       !!!!!!!!!!!!!!!!!!!!!!!!!!                                                      js-->
+                                                            <!--JS injection-->
                                                             </option>
                                                         </select>
                                                     </div>
@@ -333,12 +333,7 @@
                                         <p class="m-0 text-center"><b>Role</b></p>
                                         <select multiple class="form-control" id="role_edit"
                                                 placeholder="Choose Role" size="2" name="roles">
-                                            <!--                                            <option th:each="role : ${roles}"-->
-                                            <!--                                                    th:value="${role.getId()}"-->
-                                            <!--                                                    th:text="${role.getRole()}"-->
-                                            <!--                                                    th:selected="${role.getRole().equals('USER')}">-->
-                                            <!--                                                Roles-->
-                                            <!--                                            </option>-->
+                                            <!--JS injection-->
                                         </select>
                                     </div>
                                 </form>
@@ -418,7 +413,7 @@
                                         <p class="m-0 text-center"><b>Role</b></p>
                                         <select multiple class="form-control" id="role_delete"
                                                 disabled="disabled" size="2" name="roles">
-
+<!--JS injection-->
                                         </select>
                                     </div>
                                 </form>
@@ -631,10 +626,13 @@
         let responseRoles = await fetch(allRolesURL)
         if (responseRoles.ok) {
             let resRoles = await responseRoles.json()
-            setRolesToNewUserForm(resRoles, action);
+            if (action !== 'none') {
+                setRolesToNewUserForm(resRoles, action);
+            }
+            return resRoles
         } else {
             console.log('Error network')
-            return ''
+
         }
     }
 
@@ -706,24 +704,67 @@
 
 </script>
 <script sec:authorize="hasRole('ADMIN')">
+    function returnJsonUser(_id, _name, _surname, _age, _email, _password, _roles) {
+        return {
+            id: _id,
+            username: '',
+            name: _name,
+            surname: _surname,
+            age: _age,
+            email: _email,
+            password: _password,
+            roles: _roles.join(" ")
+
+        }
+    }
+
+    async function prepareRolesForJson(idForm, idField) {
+        let final = []
+        let rolesId = $('#' + idForm).find('#' + idField).val()
+        let i = await fillRolesToNewUserForm('none')
+        console.log(rolesId)
+        i.forEach(role => {
+            rolesId.forEach(roleId => {
+                // console.log(role.id , Number(roleId))
+                if (role.id === Number(roleId)) {
+                    final.push(role.role)
+                }
+            })
+        })
+        console.log(final)
+        return final
+
+    }
+
     async function saveNewUser() {
         newUser.onsubmit = async (e) => {
             e.preventDefault();
-            let response = await fetch(addUserURL, {
+            // let response1 = await fetch(addUserURL, {
+            //     method: 'POST',
+            //     body: new FormData(newUser)
+            // });
+            let form = new FormData(newUser)
+            let RolesUser = await prepareRolesForJson('newUser', 'role_send')
+            let bodyRequest = returnJsonUser(0, form.get('name'), form.get('surname'), form.get('age'), form.get('email'), form.get('password'), RolesUser)
+            console.log(bodyRequest)
+            let response1 = await fetch(addUserURL, {
                 method: 'POST',
-                body: new FormData(newUser)
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(bodyRequest)
             });
-            if (response.ok) {
+
+            if (response1.ok) {
                 $('#sendedFirstName').val('');
                 $('#sendedLastName').val('');
                 $('#sendedAge').val('');
                 $('#sendedEmail').val('');
                 $('#sendedPassword').val('');
                 $('#sendedRole').val(0);
-                let json = await response.json()
                 await fillMainTable();
             } else {
-                console.log('Error HTTP: ' + response.status);
+                console.log('Error HTTP: ' + response1.status);
             }
         };
     }
@@ -733,13 +774,22 @@
     async function editUser() {
         editForm.onsubmit = async (e) => {
             e.preventDefault()
-            console.log(e)
-            console.log(editForm)
-            let response = await fetch(editUserURL, {
+            // let response = await fetch(editUserURL, {
+            //     method: 'PATCH',
+            //     body: new FormData(editForm)
+            // })
+            let form = new FormData(editForm)
+            let RolesUser = await prepareRolesForJson('editForm', 'role_edit')
+            let bodyRequest = returnJsonUser(form.get('id'), form.get('name'), form.get('surname'), form.get('age'), form.get('email'), form.get('password'), RolesUser)
+            console.log(bodyRequest)
+            let response1 = await fetch(editUserURL, {
                 method: 'PATCH',
-                body: new FormData(editForm)
-            })
-            if (response.ok) {
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(bodyRequest)
+            });
+            if (response1.ok) {
                 $('#IdHidden_edit').val('')
                 $('#Id_edit').val('')
                 $('#firstname_edit').val('')
@@ -747,11 +797,10 @@
                 $('#email_edit').val('')
                 $('#password_edit').val('')
                 $('#role_edit').val(0)
-                let text = await response.text()
+                let text = await response1.text()
                 await fillMainTable()
-
             } else {
-                console.log('Error HTTP: ' + response.status)
+                console.log('Error HTTP: ' + response1.status)
             }
         }
     }
@@ -780,6 +829,7 @@
             }
         }
     }
+
     deleteUser()
 </script>
 
