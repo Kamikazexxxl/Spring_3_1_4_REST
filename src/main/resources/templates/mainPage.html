@@ -27,7 +27,8 @@
                 <nav class="navbar navbar-dark pl-0 pt-0 pb-0">
 
                     <span class="navbar-text text-white pl-0">
-                            <h5><b th:text="${user.getEmail()}"></b></h5>
+                            <h5 id="userEmailHeaderField"></h5>
+                        <!--JS-->
                     </span>
 
                     <span class="navbar-text text-white pl-1 pr-1">
@@ -35,7 +36,8 @@
                     </span>
 
                     <span class="navbar-text text-white">
-                            <h5 th:text="${user.showPrettyViewOfRoles()}">
+                            <h5 id="userRoleHeaderField">
+<!--                                JS-->
                             </h5>
                     </span>
 
@@ -43,7 +45,7 @@
                 <!--            Section of drawing info about a user and his roles ended-->
 
                 <!--                Section Logout started-->
-                <div sec:authorize="isAuthenticated()">
+                <div>
                     <form class="form-inline" action="/logout">
                         <button class="btn btn-dark " type="submit"> logout
                         </button>
@@ -63,28 +65,11 @@
                 <div class="row h-100">
                     <!--                Section of tabs with admin/user panel started-->
                     <div class="col-3 bg-white mt-2 pl-0 pr-0 pt-0">
-                        <!--                            if a principal has a admin role, then work this block-->
-                        <div sec:authorize="hasRole('ADMIN')" class="nav flex-column nav-pills"
+                        <div class="nav flex-column nav-pills" id="leftPanel"
                              role="tablist" aria-orientation="vertical">
 
-                            <a class="nav-link active pl-4" id="adminTab" data-toggle="pill"
-                               href="#adminPanel"
-                               role="tab" aria-selected="true"><h6 class="ml-2">Admin</h6>
-                            </a>
-
-                            <a class="nav-link pl-4" id="profileTab" data-toggle="pill" href="#profileUser"
-                               role="tab" aria-selected="false"><h6 class="ml-2">
-                                User</h6></a>
+                            <!--                                    Block will be filled in JS code-->
                         </div>
-                        <!--                            if a principal has a user role, then work this block-->
-                        <div sec:authorize="hasRole('ADMIN') != true && hasRole('USER') == true"
-                             class="nav flex-column nav-pills" role="tablist"
-                             aria-orientation="vertical">
-
-                            <a class="nav-link active pl-4" id="profileTab" data-toggle="pill"
-                               href="#profileUser" role="tab" aria-selected="true">User</a>
-                        </div>
-
                     </div>
                     <!--                Section of tabs with admin/user panel ended-->
                     <div class="col-9  bg-light pr-0 pt-0">
@@ -147,43 +132,8 @@
                                                                 <th sec:authorize="hasRole('ADMIN')">Delete</th>
                                                             </tr>
                                                             </thead>
-                                                            <tbody>
-                                                            <th:block>
-                                                                <tr th:each="u:${Users}">
-                                                                    <th th:text="${u.getId()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${u.getName()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${u.getSurname()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${u.getAge()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${u.getEmail()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${u.showPrettyViewOfRoles()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th sec:authorize="hasRole('ADMIN')">
-                                                                        <button type="button"
-                                                                                class="btn btn-info modalButtonEditUser EditButtonOnTable"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modal-edit">Edit
-                                                                        </button>
-                                                                    </th>
-                                                                    <th sec:authorize="hasRole('ADMIN')">
-                                                                        <button type="button"
-                                                                                class="btn btn-danger modalButtonDeleteUser DeleteButtonOnTable"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modal-delete">Delete
-                                                                        </button>
-                                                                    </th>
-                                                                </tr>
-                                                            </th:block>
+                                                            <tbody id="MainTable">
+                                                            <!--JS-->
                                                             </tbody>
                                                         </table>
                                                         <!--                                                Table with users ended-->
@@ -220,29 +170,8 @@
                                                                 <th>Role</th>
                                                             </tr>
                                                             </thead>
-                                                            <tbody>
-                                                            <th:block>
-                                                                <tr>
-                                                                    <th th:text="${user.getId()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${user.getName()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${user.getSurname()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${user.getAge()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${user.getEmail()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                    <th th:text="${user.showPrettyViewOfRoles()}"
-                                                                        style="vertical-align: middle">>
-                                                                    </th>
-                                                                </tr>
-                                                            </th:block>
+                                                            <tbody id="BodyTableAboutUser">
+                                                            <!--JS-->
                                                             </tbody>
                                                         </table>
                                                         <!--                                                Info about users ended-->
@@ -269,56 +198,51 @@
                                             <div class="col-md-12 pr-3 pt-0 pl-0"
                                                  style="overflow: auto; overflow-y: hidden;">
                                                 <!--                                                Form for the new user started-->
-                                                <form method="post" th:action="@{/admin/add/}"
-                                                      th:object="${newUser}">
+                                                <form method="post" id="newUser" action="/api/users"
+                                                      modelAttribute="user">
 
                                                     <div class="form-group">
                                                         <p class="m-0 text-center"><b>First name</b></p>
-                                                        <input th:field="*{name}" class="form-control"
-                                                               id="firstname" required="required"
+                                                        <input class="form-control"
+                                                               id="sendedFirstName" required="required" name="name"
                                                                placeholder="Enter name">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <p class="m-0 text-center"><b>Last name</b></p>
-                                                        <input th:field="*{surname}" class="form-control"
-                                                               id="lastname" required="required"
-                                                               placeholder="Enter lastname ">
+                                                        <input class="form-control"
+                                                               id="sendedLastName" required="required" name="surname"
+                                                               placeholder="Enter lastname">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <p class="m-0 text-center"><b>Age</b></p>
-                                                        <input type="number" th:field="*{age}"
-                                                               class="form-control" id="age" required="required"
+                                                        <input type="number" class="form-control" id="sendedAge"
+                                                               required="required" name="age"
                                                                placeholder="Enter age">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <p class="m-0 text-center"><b>Email</b></p>
-                                                        <input type="email" th:field="*{email}"
-                                                               class="form-control"
-                                                               id="email" required="required"
+                                                        <input type="email"
+                                                               class="form-control" name="email"
+                                                               id="sendedEmail" required="required"
                                                                placeholder="Enter email">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <p class="m-0 text-center"><b>Password</b></p>
-                                                        <input th:field="*{password}" class="form-control"
-                                                               id="password" required="required"
+                                                        <input class="form-control" name="password"
+                                                               id="sendedPassword" required="required"
                                                                placeholder="Enter password">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <p class="m-0 text-center"><b>Role</b></p>
-                                                        <select multiple class="form-control" id="role"
-                                                                required="required"
-                                                                placeholder="Choose Role" size="2"
-                                                                name="userRole">
-                                                            <option th:each="role : ${roles}"
-                                                                    th:value="${role.getId()}"
-                                                                    th:text="${role.getRole()}"
-                                                                    th:selected="${role.getRole().equals('USER')}">
-                                                                Roles
+                                                        <select multiple class="form-control" id="role_send"
+                                                                required="required" name="roles"
+                                                                placeholder="Choose Role" size="2">
+                                                            <!--       !!!!!!!!!!!!!!!!!!!!!!!!!!                                                      js-->
                                                             </option>
                                                         </select>
                                                     </div>
@@ -343,6 +267,7 @@
     </div>
 </div>
 
+
 <!--MODAL WINDOWS-->
 <div sec:authorize="hasRole('ADMIN')">
     <div id="modal-edit" class="modal fade">
@@ -351,7 +276,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">Edit user</h5>
-                    <button type="button" class="close" data-dismiss="model">x</button>
+                    <button type="button" class="close" data-dismiss="model" id="closeEdit">x</button>
                 </div>
                 <div class="modal-body">
 
@@ -359,40 +284,39 @@
                         <div class="row bg-white" style="width: 300px;">
                             <div class="col rounded p-0">
 
-                                <form id="editForm" method="post" action=""
-                                      th:object="${newUser}">
+                                <form id="editForm" method="PATCH" action="" modelAttribute="user">
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>ID</b></p>
+                                        <input type="hidden" id="IdHidden_edit" name="id" readonly>
                                         <input type="number" class="form-control" id="Id_edit" placeholder="ID"
-                                               th
-                                               th:field="*{id}" disabled="disabled" readonly>
+                                               disabled="disabled" readonly>
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>First name</b></p>
-                                        <input th:field="*{name}" class="form-control"
-                                               id="firstname_edit" required="required"
+                                        <input class="form-control"
+                                               id="firstname_edit" required="required" name="name"
                                                placeholder="Enter name">
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Lastname</b></p>
-                                        <input th:field="*{surname}" class="form-control"
-                                               id="lastname_edit" required="required"
+                                        <input class="form-control"
+                                               id="lastname_edit" required="required" name="surname"
                                                placeholder="Enter lastname ">
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Age</b></p>
-                                        <input type="number" th:field="*{age}"
+                                        <input type="number" name="age"
                                                class="form-control" id="age_edit" required="required"
                                                placeholder="Enter age">
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Email</b></p>
-                                        <input type="email" th:field="*{email}"
+                                        <input type="email" name="email"
                                                class="form-control"
                                                id="email_edit" required="required"
                                                placeholder="Enter email">
@@ -400,7 +324,7 @@
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Password</b></p>
-                                        <input th:field="*{password}" class="form-control"
+                                        <input name="password" class="form-control"
                                                id="password_edit"
                                                placeholder="Enter password">
                                     </div>
@@ -408,13 +332,13 @@
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Role</b></p>
                                         <select multiple class="form-control" id="role_edit"
-                                                placeholder="Choose Role" size="2" name="userRole">
-                                            <option th:each="role : ${roles}"
-                                                    th:value="${role.getId()}"
-                                                    th:text="${role.getRole()}"
-                                                    th:selected="${role.getRole().equals('USER')}">
-                                                Roles
-                                            </option>
+                                                placeholder="Choose Role" size="2" name="roles">
+                                            <!--                                            <option th:each="role : ${roles}"-->
+                                            <!--                                                    th:value="${role.getId()}"-->
+                                            <!--                                                    th:text="${role.getRole()}"-->
+                                            <!--                                                    th:selected="${role.getRole().equals('USER')}">-->
+                                            <!--                                                Roles-->
+                                            <!--                                            </option>-->
                                         </select>
                                     </div>
                                 </form>
@@ -424,7 +348,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="close" class="btn btn-secondary " data-dismiss="modal">Close</button>
+                    <button type="close" class="btn btn-secondary " data-dismiss="modal" id="closeEdit1">Close</button>
                     <button type="button" class="btn btn-primary " id="EditButton">Edit</button>
                 </div>
             </div>
@@ -438,7 +362,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">Delete user</h5>
-                    <button type="close" data-dismiss="model" class="closeContent">x</button>
+                    <button type="button" data-dismiss="model" class="close" id="deleteButtonClose">x</button>
                 </div>
 
                 <div class="modal-body">
@@ -446,26 +370,25 @@
                         <div class="row bg-white" style="width: 300px;">
                             <div class="col rounded p-0">
 
-                                <form id="deleteForm" method="post" action=""
-                                      th:object="${newUser}">
-
+                                <form id="deleteForm" method="DELETE" modelAttribute="user">
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>ID</b></p>
-                                        <input type="number" class="form-control" id="Id_delete"
-                                               placeholder="ID"
-                                               disabled="disabled">
+
+                                        <input type="hidden" id="IdHidden_delete" name="id" readonly>
+                                        <input type="number" class="form-control" id="Id_delete" placeholder="ID"
+                                               disabled="disabled" readonly>
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>First name</b></p>
-                                        <input class="form-control"
+                                        <input class="form-control" name='name'
                                                id="firstname_delete" disabled="disabled"
                                                placeholder="Enter name">
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Lastname</b></p>
-                                        <input class="form-control"
+                                        <input class="form-control" name="surname"
                                                id="lastname_delete" disabled="disabled"
                                                placeholder="Enter lastname ">
                                     </div>
@@ -473,20 +396,20 @@
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Age</b></p>
                                         <input type="number" class="form-control" id="age_delete"
-                                               disabled="disabled"
+                                               disabled="disabled" name="age"
                                                placeholder="Enter age">
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Email</b></p>
-                                        <input type="email" class="form-control"
+                                        <input type="email" class="form-control" name="email"
                                                id="email_delete" disabled="disabled"
                                                placeholder="Enter email">
                                     </div>
 
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Password</b></p>
-                                        <input class="form-control"
+                                        <input class="form-control" name="password"
                                                id="password_delete" disabled="disabled"
                                                placeholder="Enter password">
                                     </div>
@@ -494,13 +417,8 @@
                                     <div class="form-group">
                                         <p class="m-0 text-center"><b>Role</b></p>
                                         <select multiple class="form-control" id="role_delete"
-                                                disabled="disabled" size="2" name="userRole">
-                                            <option th:each="role : ${roles}"
-                                                    th:value="${role.getId()}"
-                                                    th:text="${role.getRole()}"
-                                                    th:selected="${role.getRole().equals('USER')}">
-                                                Roles
-                                            </option>
+                                                disabled="disabled" size="2" name="roles">
+
                                         </select>
                                     </div>
                                 </form>
@@ -510,12 +428,10 @@
                 </div>
 
                 <div class="modal-footer">
-
-                    <div class="row bg-light pl-2 pr2">
-                        <button type="close" class="btn btn-secondary pl-2 pr2" data-dismiss="modal">Close
+                        <button type="close" class="btn btn-secondary " data-dismiss="modal"
+                                id="deleteButtonClose1">Close
                         </button>
-                        <button type="button" class="btn btn-primary pl-2 pr2" id="DeleteButton">Delete</button>
-                    </div>
+                        <button type="button" class="btn btn-danger " id="DeleteButton">Delete</button>
 
                 </div>
             </div>
@@ -526,49 +442,363 @@
 
 <script>
 
-    function setDataToTableLine(tableLine, action) {
-        let data = []
-        for (let i = 0; i < 6; i++) {
-            data[i] = $(tableLine[i]).text()
+    let allUsersURL = 'http://localhost:8081/api/users' //GetRequest
+    let currentUserURL = 'http://localhost:8081/api/current' //GetRequest
+    let allRolesURL = 'http://localhost:8081/api/allroles'
+    let addUserURL = 'http://localhost:8081/api/users' //PostRequest
+    let removeUserURL = 'http://localhost:8081/api/users/'  //add id, deleteRequest
+    let editUserURL = 'http://localhost:8081/api/users'//add id, PatchRequestforeach js
+
+    async function fillUSerContent() {
+        let responseUser = await fetch(currentUserURL)
+        if (responseUser.ok) {
+            let resUser = await responseUser.json()
+            fillHeader(resUser)
+            fillLeftPanel(resUser)
+            if (hasAdmin(resUser.roles) === 0) {
+                $('#adminPanel').removeClass('active')
+                $('#profileUser').addClass('show').addClass('active')
+            }
+            fullUserDataTable(resUser, 'user')
+        } else {
+            console.log('Error network')
+            return ''
         }
-        $('#' + action + 'Form').attr('action', '/admin/' + action + '/' + data[0])
-        console.log('/' + action + '/' + data[0])
-        $('#Id_' + action).val(data[0])
-        $('#firstname_' + action).val(data[1])
-        $('#lastname_' + action).val(data[2])
-        $('#age_' + action).val(data[3])
-        $('#email_' + action).val(data[4])
-        $('#role_' + action).val(data[5])
 
     }
-    //throwing user data to edit modal form
-    $('.EditButtonOnTable').click(function () {
-        let arrayVal = $(this).parent('th').siblings('th');
-        setDataToTableLine(arrayVal, 'edit')
-    });
-    //throwing user data to delete modal form
-    $('.DeleteButtonOnTable').click(function () {
-        let arrayVal = $(this).parent('th').siblings('th');
-        setDataToTableLine(arrayVal, 'delete')
-    });
-    //send data from form to /edit/someId page
+
+    function fillHeader(current) {
+        $('#userEmailHeaderField').html('<b>' + current.email + '</b>')
+        $('#userRoleHeaderField').html(getStringRolesFromArray(current.roles))
+    }//+
+
+    function fillLeftPanel(current) {
+        let HTMLFiller = '<a class="nav-link active pl-4" id="profileTab" data-toggle="pill" href="#' +
+            'profileUser"' + ' role="tab" aria-selected="true"><h6 class="ml-2">User</h6>\n' +
+            '                            </a>'
+        if (hasAdmin(current.roles)) {
+            HTMLFiller = '<a class="nav-link active pl-4" id="adminTab" data-toggle="pill" href="#' +
+                'adminPanel"' +
+                'role="tab" aria-selected="true"><h6 class="ml-2">Admin</h6>\n' +
+                '                            </a>' + HTMLFiller.replace('active', '').replace('\"true\"', '\"false\"')
+        }
+        $('#leftPanel').html(HTMLFiller)
+    }
+
+    fillUSerContent()
+
+    function getStringRolesFromArray(arr) {
+        let str = ""
+        for (let i = 0; i < arr.length; i++) {
+            str += arr[i].role + " "
+        }
+        return str
+    }
+
+
+    function hasAdmin(arr) {
+        let str = ""
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].role === 'ADMIN') return 1
+        }
+        return 0
+    }
+
+    function fullUserDataTable(SetUserDataJSON, action) {
+        let id = ''
+        let HTML = ''
+        let AdminPartHTML = ''
+        if (action === 'user') {
+            id = '#BodyTableAboutUser'
+            HTML = jsonExtract(SetUserDataJSON, '', '')
+            console.log(HTML)
+        } else if (action === 'showAll') {
+            id = '#MainTable'
+            AdminPartHTML = '                                                                    <th>\n' +
+                '                                                                        <button type="button"\n' +
+                '                                                                                class="btn btn-info EditButtonOnTable"\n' +
+                '                                                                                data-toggle="modal"\n' +
+                '                                                                                data-target="#modal-edit">Edit\n' +
+                '                                                                        </button>\n' +
+                '                                                                    </th>\n' +
+                '                                                                    <th >\n' +
+                '                                                                        <button type="button"\n' +
+                '                                                                                class="btn btn-danger DeleteButtonOnTable"\n' +
+                '                                                                                data-toggle="modal"\n' +
+                '                                                                                data-target="#modal-delete">Delete\n' +
+                '                                                                        </button>\n' +
+                '                                                                    </th>'
+            let c = 0
+            for (let i = 0; i < SetUserDataJSON.length; i++) {
+                HTML += jsonExtract(SetUserDataJSON[i], '', AdminPartHTML)
+            }
+        }
+        $(id).html(HTML)
+    }
+
+    function jsonExtract(json, html, adminPart) {
+        html += '<tr>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += (json["id"]) + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += json["name"] + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += json["surname"] + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += (json["age"]) + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += json["email"] + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        for (let i = 0; i < json['roles'].length; i++) {
+            html += json['roles'][i]['role'] + ' '
+        }
+        html += '</th>'
+        html += adminPart
+        html += '</tr>'
+        return html
+    }
+</script>
+
+<script sec:authorize="hasRole('ADMIN')">
+    //блок отображения главной таблицы
+    async function fillMainTable() {
+        let responseUsers = await fetch(allUsersURL)
+        if (responseUsers.ok) {
+            let resUsers = await responseUsers.json()
+            console.log('fillMainTable')
+            fullUserDataTable(resUsers, 'showAll')
+            refreshFunctions()
+        } else {
+            console.log('Error network')
+            return ''
+        }
+    }
+
+    function fullUserDataTable(SetUserDataJSON, action) {
+        let id = ''
+        let HTML = ''
+        let AdminPartHTML = ''
+        if (action === 'user') {
+            id = '#BodyTableAboutUser'
+            HTML = jsonExtract(SetUserDataJSON, '', '')
+        } else if (action === 'showAll') {
+            id = '#MainTable'
+            AdminPartHTML = '                                                                    <th>\n' +
+                '                                                                        <button type="button"\n' +
+                '                                                                                class="btn btn-info modalButtonEditUser EditButtonOnTable"\n' +
+                '                                                                                data-toggle="modal"\n' +
+                '                                                                                data-target="#modal-edit">Edit\n' +
+                '                                                                        </button>\n' +
+                '                                                                    </th>\n' +
+                '                                                                    <th >\n' +
+                '                                                                        <button type="button"\n' +
+                '                                                                                class="btn btn-danger modalButtonDeleteUser DeleteButtonOnTable"\n' +
+                '                                                                                data-toggle="modal"\n' +
+                '                                                                                data-target="#modal-delete">Delete\n' +
+                '                                                                        </button>\n' +
+                '                                                                    </th>'
+            let c = 0
+            for (let i = 0; i < SetUserDataJSON.length; i++) {
+                HTML += jsonExtract(SetUserDataJSON[i], '', AdminPartHTML)
+            }
+        }
+        $(id).html(HTML)
+    }
+
+    function jsonExtract(json, html, adminPart) {
+        console.log("enter")
+        html += '<tr>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += (json["id"]) + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += json["name"] + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += json["surname"] + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += (json["age"]) + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        html += json["email"] + '</th>'
+        html += '<th style=\"vertical-align: middle\">'
+        for (let i = 0; i < json['roles'].length; i++) {
+            html += json['roles'][i]['role'] + ' '
+        }
+        html += '</th>'
+        html += adminPart
+        html += '</tr>'
+        return html
+    }
+
+    fillMainTable()
+
+    async function fillRolesToNewUserForm(action) {
+        let responseRoles = await fetch(allRolesURL)
+        if (responseRoles.ok) {
+            let resRoles = await responseRoles.json()
+            setRolesToNewUserForm(resRoles,action);
+        } else {
+            console.log('Error network')
+            return ''
+        }
+    }
+
+    fillRolesToNewUserForm('send')
+
+    function setRolesToNewUserForm(roles, action) {
+        //console.log(roles)
+        let HTML = ''
+        for (let i = 0; i < roles.length; i++) {
+
+            //console.log(roles[i])
+            HTML += '<option value=\'' + roles[i]['id'] + '\' '
+            HTML += '>' + roles[i]['role'] + '</option>'
+        }
+        //console.log(HTML)
+        $('#role_'+action).html(HTML)
+
+    }
+
+    function refreshFunctions() {
+
+        function setDataToTableLine(tableLine, action) {
+            let data = []
+            for (let i = 0; i < 6; i++) {
+                data[i] = $(tableLine[i]).text()
+            }
+            $('#IdHidden_' + action).val(data[0])
+            $('#Id_' + action).val(data[0])
+            $('#firstname_' + action).val(data[1])
+            $('#lastname_' + action).val(data[2])
+            $('#age_' + action).val(data[3])
+            $('#email_' + action).val(data[4])
+            fillRolesToNewUserForm(action)
+
+        }
+        //throwing user data to edit modal form
+        $('.EditButtonOnTable').click(function () {
+            let arrayVal = $(this).parent('th').siblings('th');
+            setDataToTableLine(arrayVal, 'edit')
+        });
+        //throwing user data to delete modal form
+        $('.DeleteButtonOnTable').click(function () {
+            let arrayVal = $(this).parent('th').siblings('th');
+            setDataToTableLine(arrayVal, 'delete')
+        });
+
+        //send data from form to /edit/someId page
+
+
+
+        /*flipping between admin and user panels*/
+
+    }
     $('#EditButton').click(function () {
         $('#editForm').submit();
+        $('#closeEdit1').click()
     });
-    //send data from form to /delete/someId page
+
     $('#DeleteButton').click(function () {
+        console.log('db pressed')
         $('#deleteForm').submit();
-
+          $('#deleteButtonClose1').click()
+    });
+    $('#closeEdit').click(function () {
+        $('#closeEdit1').click()
     });
 
-    /*flipping between admin and user panels*/
+    $('#deleteButtonClose').click(function () {
+        $('#deleteButtonClose1').click()
+    });
     $('#adminTab').click(function () {
         $(selector).show()
     });
     $('#profileTab').click(function () {
         $(selector).show()
     });
+</script>
 
 </script>
-</body>
-</html>
+<script sec:authorize="hasRole('ADMIN')">
+    // отправка форм
+    async function saveNewUser() {
+        newUser.onsubmit = async (e) => {
+            e.preventDefault();
+            //Отправляем форму
+            let response = await fetch(addUserURL, {
+                method: 'POST',
+                body: new FormData(newUser)
+            });
+            if (response.ok) {
+                $('#sendedFirstName').val('');
+                $('#sendedLastName').val('');
+                $('#sendedAge').val('');
+                $('#sendedEmail').val('');
+                $('#sendedPassword').val('');
+                $('#sendedRole').val(0);
+                let json = await response.json()
+                await fillMainTable();
+            } else {
+                console.log('Ошибка HTTP: ' + response.status);
+            }
+        };
+    }
+
+    saveNewUser();
+
+    async function editUser() {
+        editForm.onsubmit = async (e) => {
+            e.preventDefault()
+            console.log(e)
+            console.log(editForm)
+            let response = await fetch(editUserURL, {
+                method: 'PATCH',
+                body: new FormData(editForm)
+            })
+            if (response.ok) {
+                $('#IdHidden_edit').val('')
+                $('#Id_edit').val('')
+                $('#firstname_edit').val('')
+                $('#lastname_edit').val('')
+                $('#email_edit').val('')
+                $('#password_edit').val('')
+                $('#role_edit').val(0)
+                let text = await response.text()
+                await fillMainTable()
+
+            } else {
+                console.log('Ошибка HTTP: ' + response.status)
+            }
+        }
+    }
+    editUser()
+
+    async function deleteUser() {
+        deleteForm.onsubmit = async (e) => {
+            e.preventDefault()
+            console.log('entered')
+            let formData = new FormData(deleteForm)
+            let response = await fetch(removeUserURL + formData.get('id'), {
+                method: 'DELETE'
+            })
+          //  await  userService.remove(formData.get('id'))
+            if (response.ok) {
+                $('#IdHidden_delete').val('')
+                $('#Id_delete').val('')
+                $('#firstname_delete').val('')
+                $('#lastname_delete').val('')
+                $('#email_delete').val('')
+                $('#password_delete').val('')
+                $('#role_delete').val(0)
+                let text = await response.text()
+                await fillMainTable()
+            } else {
+                console.log('Ошибка HTTP: ' + response.status)
+            }
+        }
+    }
+
+    deleteUser()
+</script>
+
+
+    </body>
+    </html>

@@ -1,5 +1,6 @@
 package com.example.spring33.services;
 
+import com.example.spring33.exceptions.NoSuchUserException;
 import com.example.spring33.exceptions.UserNotExistsException;
 import com.example.spring33.models.Role;
 import com.example.spring33.models.User;
@@ -69,24 +70,6 @@ public class UserService implements UserDetailsService, UserServiseInterface {
         user.setEnabled(true);
 
         userRepository.save(user);
-//        role = new Role();
-//        role.setRole("USER");
-//        temp.add(role);
-//        User user = new User("user", 40, "user@mail.ru",
-//                "123", temp);
-//        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-//        userRepository.save(user);
-//        temp.clear();
-//        role = new Role();
-//        role.setRole("ADMIN");
-//        temp.add(role);
-//        role = new Role();
-//        role.setRole("USER");
-//        temp.add(role);
-//        User sup = new User("sup", 40, "sup@mail.ru",
-//                "123", temp);
-//        sup.setPassword(new BCryptPasswordEncoder().encode(sup.getPassword()));
-//        userRepository.save(sup);
     }
 
     @Override
@@ -100,7 +83,7 @@ public class UserService implements UserDetailsService, UserServiseInterface {
     @Transactional
     public User findUserByEmail(String username) {
 
-        return userRepository.findUserByEmail(username).get();
+        return userRepository.findUserByEmail(username).orElseThrow(()-> new UserNotExistsException("User with email: " + username + "not found"));
     }
 
     @Override
@@ -129,8 +112,6 @@ public class UserService implements UserDetailsService, UserServiseInterface {
 
     @Override
     public void save(User user) {
-        System.out.println(user);
-//        User extracted = userRepository.findUserByEmail(user.getEmail()).or();
         if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("User already exists!");
         } else {
@@ -146,12 +127,13 @@ public class UserService implements UserDetailsService, UserServiseInterface {
             user.setCredentialsNonExpired(true);
             user.setEnabled(true);
             userRepository.save(user);
+
         }
     }
 
     @Override
     public void edit(User user) {
-        User extracted = userRepository.findUserByEmail(user.getEmail()).get();
+        User extracted = userRepository.findById(user.getId()).orElseThrow(()-> new NoSuchUserException("This user hasn't found in database"));
         if (user.getRoles() == null) {
             Set<Role> defaultRole = new HashSet<>();
             defaultRole.add(new Role("USER"));
@@ -168,10 +150,14 @@ public class UserService implements UserDetailsService, UserServiseInterface {
         user.setCredentialsNonExpired(true);
         user.setEnabled(true);
         userRepository.save(user);
+
     }
 
     @Override
     public void remove(long id) {
+        if(!userRepository.findById(id).isPresent()) {
+            throw new NoSuchUserException("This user hasn't found in database");
+        }
         userRepository.deleteById(id);
     }
 
