@@ -428,14 +428,13 @@
                 </div>
 
                 <div class="modal-footer">
-                        <button type="close" class="btn btn-secondary " data-dismiss="modal"
-                                id="deleteButtonClose1">Close
-                        </button>
-                        <button type="button" class="btn btn-danger " id="DeleteButton">Delete</button>
+                    <button type="close" class="btn btn-secondary " data-dismiss="modal"
+                            id="deleteButtonClose1">Close
+                    </button>
+                    <button type="button" class="btn btn-danger " id="DeleteButton">Delete</button>
 
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -447,7 +446,7 @@
     let allRolesURL = 'http://localhost:8081/api/allroles'
     let addUserURL = 'http://localhost:8081/api/users' //PostRequest
     let removeUserURL = 'http://localhost:8081/api/users/'  //add id, deleteRequest
-    let editUserURL = 'http://localhost:8081/api/users'//add id, PatchRequestforeach js
+    let editUserURL = 'http://localhost:8081/api/users'//add id, PatchRequest
 
     async function fillUSerContent() {
         let responseUser = await fetch(currentUserURL)
@@ -464,13 +463,12 @@
             console.log('Error network')
             return ''
         }
-
     }
 
     function fillHeader(current) {
         $('#userEmailHeaderField').html('<b>' + current.email + '</b>')
         $('#userRoleHeaderField').html(getStringRolesFromArray(current.roles))
-    }//+
+    }
 
     function fillLeftPanel(current) {
         let HTMLFiller = '<a class="nav-link active pl-4" id="profileTab" data-toggle="pill" href="#' +
@@ -606,7 +604,6 @@
     }
 
     function jsonExtract(json, html, adminPart) {
-        console.log("enter")
         html += '<tr>'
         html += '<th style=\"vertical-align: middle\">'
         html += (json["id"]) + '</th>'
@@ -634,7 +631,7 @@
         let responseRoles = await fetch(allRolesURL)
         if (responseRoles.ok) {
             let resRoles = await responseRoles.json()
-            setRolesToNewUserForm(resRoles,action);
+            setRolesToNewUserForm(resRoles, action);
         } else {
             console.log('Error network')
             return ''
@@ -644,16 +641,12 @@
     fillRolesToNewUserForm('send')
 
     function setRolesToNewUserForm(roles, action) {
-        //console.log(roles)
         let HTML = ''
         for (let i = 0; i < roles.length; i++) {
-
-            //console.log(roles[i])
             HTML += '<option value=\'' + roles[i]['id'] + '\' '
             HTML += '>' + roles[i]['role'] + '</option>'
         }
-        //console.log(HTML)
-        $('#role_'+action).html(HTML)
+        $('#role_' + action).html(HTML)
 
     }
 
@@ -673,24 +666,19 @@
             fillRolesToNewUserForm(action)
 
         }
-        //throwing user data to edit modal form
+
         $('.EditButtonOnTable').click(function () {
             let arrayVal = $(this).parent('th').siblings('th');
             setDataToTableLine(arrayVal, 'edit')
         });
-        //throwing user data to delete modal form
+
         $('.DeleteButtonOnTable').click(function () {
             let arrayVal = $(this).parent('th').siblings('th');
             setDataToTableLine(arrayVal, 'delete')
         });
 
-        //send data from form to /edit/someId page
-
-
-
-        /*flipping between admin and user panels*/
-
     }
+
     $('#EditButton').click(function () {
         $('#editForm').submit();
         $('#closeEdit1').click()
@@ -699,7 +687,7 @@
     $('#DeleteButton').click(function () {
         console.log('db pressed')
         $('#deleteForm').submit();
-          $('#deleteButtonClose1').click()
+        $('#deleteButtonClose1').click()
     });
     $('#closeEdit').click(function () {
         $('#closeEdit1').click()
@@ -718,11 +706,9 @@
 
 </script>
 <script sec:authorize="hasRole('ADMIN')">
-    // отправка форм
     async function saveNewUser() {
         newUser.onsubmit = async (e) => {
             e.preventDefault();
-            //Отправляем форму
             let response = await fetch(addUserURL, {
                 method: 'POST',
                 body: new FormData(newUser)
@@ -737,7 +723,7 @@
                 let json = await response.json()
                 await fillMainTable();
             } else {
-                console.log('Ошибка HTTP: ' + response.status);
+                console.log('Error HTTP: ' + response.status);
             }
         };
     }
@@ -765,21 +751,20 @@
                 await fillMainTable()
 
             } else {
-                console.log('Ошибка HTTP: ' + response.status)
+                console.log('Error HTTP: ' + response.status)
             }
         }
     }
+
     editUser()
 
     async function deleteUser() {
         deleteForm.onsubmit = async (e) => {
             e.preventDefault()
-            console.log('entered')
             let formData = new FormData(deleteForm)
             let response = await fetch(removeUserURL + formData.get('id'), {
                 method: 'DELETE'
             })
-          //  await  userService.remove(formData.get('id'))
             if (response.ok) {
                 $('#IdHidden_delete').val('')
                 $('#Id_delete').val('')
@@ -791,14 +776,13 @@
                 let text = await response.text()
                 await fillMainTable()
             } else {
-                console.log('Ошибка HTTP: ' + response.status)
+                console.log('Error HTTP: ' + response.status)
             }
         }
     }
-
     deleteUser()
 </script>
 
 
-    </body>
-    </html>
+</body>
+</html>
