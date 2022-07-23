@@ -1,12 +1,12 @@
-package com.example.spring33.models;
+package com.example.spring.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+
 @Data
-//@NoArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
@@ -15,7 +15,6 @@ public class Role implements GrantedAuthority {
     @GeneratedValue
     private long id;
 
-   // @ManyToMany(mappedBy = "users")
     @Column
     private String role;
 
@@ -36,6 +35,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return  role;
+        return role;
     }
 }

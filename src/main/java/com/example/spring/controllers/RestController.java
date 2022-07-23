@@ -1,10 +1,10 @@
-package com.example.spring33.controllers;
+package com.example.spring.controllers;
 
 
-import com.example.spring33.models.Role;
-import com.example.spring33.models.User;
-import com.example.spring33.services.RoleService;
-import com.example.spring33.services.UserService;
+import com.example.spring.models.Role;
+import com.example.spring.models.User;
+import com.example.spring.services.RoleService;
+import com.example.spring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

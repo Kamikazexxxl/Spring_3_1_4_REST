@@ -1,4 +1,4 @@
-package com.example.spring33;
+package com.example.spring;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

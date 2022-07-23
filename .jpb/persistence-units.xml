@@ -4,7 +4,7 @@
     <persistence-units>
       <persistence-unit name="Default">
         <packages>
-          <package value="com.example.spring33" />
+          <package value="com.example.spring" />
         </packages>
       </persistence-unit>
     </persistence-units>
